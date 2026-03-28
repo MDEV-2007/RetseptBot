@@ -1,0 +1,217 @@
+# Russian translation for MediScript
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "English"
+msgstr "English"
+
+msgid "Uzbek"
+msgstr "O'zbekcha"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Patients"
+msgstr "Пациенты"
+
+msgid "Drugs"
+msgstr "Препараты"
+
+msgid "Prescriptions"
+msgstr "Рецепты"
+
+msgid "Dashboard"
+msgstr "Главная"
+
+msgid "New Prescription"
+msgstr "Новый рецепт"
+
+msgid "Add Patient"
+msgstr "Добавить пациента"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "General Practitioner"
+msgstr "Терапевт"
+
+msgid "Good morning"
+msgstr "Доброе утро"
+
+msgid "Good afternoon"
+msgstr "Добрый день"
+
+msgid "Good evening"
+msgstr "Добрый вечер"
+
+msgid "Quick Access"
+msgstr "Быстрый доступ"
+
+msgid "Recent Prescriptions"
+msgstr "Последние рецепты"
+
+msgid "View all"
+msgstr "Все"
+
+msgid "No prescriptions yet"
+msgstr "Рецептов пока нет"
+
+msgid "Overview"
+msgstr "Обзор"
+
+msgid "My Rx"
+msgstr "Мои рецепты"
+
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "Drug Database"
+msgstr "База препаратов"
+
+msgid "Recent Activity"
+msgstr "Последняя активность"
+
+msgid "Search by patient or diagnosis\u2026"
+msgstr "Поиск по пациенту или диагнозу\u2026"
+
+msgid "Search patients by name\u2026"
+msgstr "Поиск пациента по имени\u2026"
+
+msgid "Search drugs by name or category\u2026"
+msgstr "Поиск по названию или категории\u2026"
+
+msgid "All Patients"
+msgstr "Все пациенты"
+
+msgid "All Drugs"
+msgstr "Все препараты"
+
+msgid "No prescriptions found for"
+msgstr "Рецепты не найдены:"
+
+msgid "No prescriptions created yet."
+msgstr "Рецептов ещё нет."
+
+msgid "Create First Prescription"
+msgstr "Создать первый рецепт"
+
+msgid "No patients found for"
+msgstr "Пациенты не найдены:"
+
+msgid "No patients registered yet."
+msgstr "Пациентов пока нет."
+
+msgid "Add First Patient"
+msgstr "Добавить первого пациента"
+
+msgid "No drugs found for"
+msgstr "Препараты не найдены:"
+
+msgid "No drugs in database. Add them via Django Admin."
+msgstr "В базе нет препаратов. Добавьте через Django Admin."
+
+msgid "Clear search"
+msgstr "Сбросить"
+
+msgid "Prev"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Вперёд"
+
+msgid "Details"
+msgstr "Подробнее"
+
+msgid "View"
+msgstr "Просмотр"
+
+msgid "Prescription"
+msgstr "Рецепт"
+
+msgid "Physician"
+msgstr "Врач"
+
+msgid "Patient"
+msgstr "Пациент"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Specialty"
+msgstr "Специальность"
+
+msgid "Age / Gender"
+msgstr "Возраст / Пол"
+
+msgid "Diagnosis"
+msgstr "Диагноз"
+
+msgid "Medications"
+msgstr "Препараты"
+
+msgid "Download PDF"
+msgstr "Скачать PDF"
+
+msgid "Print"
+msgstr "Печать"
+
+msgid "Send to Telegram"
+msgstr "Отправить в Telegram"
+
+msgid "Delete Prescription"
+msgstr "Удалить рецепт"
+
+msgid "Add New Patient"
+msgstr "Добавить пациента"
+
+msgid "Save Changes"
+msgstr "Сохранить"
+
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Telegram ID"
+msgstr "Telegram ID"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Don't have an account?"
+msgstr "Нет аккаунта?"
+
+msgid "Ask your administrator to create one via Django Admin."
+msgstr "Попросите администратора создать аккаунт через Django Admin."
+
+msgid "registered"
+msgstr "зарегистрировано"
+
+msgid "medication"
+msgstr "препарат"
+
+msgid "medications"
+msgstr "препаратов"
+
+msgid "Results for"
+msgstr "Результаты:"
+
+msgid "Drug Name"
+msgstr "Название"
+
+msgid "Generic"
+msgstr "МНН"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Dosage"
+msgstr "Дозировка"
+
+msgid "Send this prescription to your Telegram?"
+msgstr "Отправить этот рецепт в Telegram?"

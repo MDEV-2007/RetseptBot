@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prescription {{ prescription.prescription_number }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 16mm;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      color: #111;
+      background: #fff;
+    }
+
+    /* ── Header ── */
+    .header-table { width: 100%; border-bottom: 2pt solid #1a56a0; padding-bottom: 8pt; margin-bottom: 12pt; }
+    .clinic-name  { font-size: 18pt; font-weight: bold; color: #1a56a0; }
+    .clinic-sub   { font-size: 9pt; color: #555; margin-top: 2pt; }
+    .rx-num       { font-size: 12pt; font-weight: bold; color: #1a56a0; }
+    .rx-date      { font-size: 9pt; color: #444; text-align: right; }
+
+    /* ── Info boxes ── */
+    .info-table  { width: 100%; margin-bottom: 10pt; border-collapse: collapse; }
+    .info-cell   {
+      width: 50%;
+      padding: 7pt 9pt;
+      border: 1pt solid #c8d8ea;
+      background: #f7fbff;
+      vertical-align: top;
+    }
+    .info-cell:first-child { padding-right: 5pt; }
+    .info-cell:last-child  { padding-left: 5pt; }
+    .box-title {
+      font-size: 7pt;
+      text-transform: uppercase;
+      letter-spacing: 1pt;
+      color: #1a56a0;
+      margin-bottom: 4pt;
+      font-weight: bold;
+    }
+    .info-line  { margin: 2pt 0; font-size: 10pt; }
+    .info-label { color: #666; font-size: 8.5pt; }
+
+    /* ── Diagnosis ── */
+    .diag-block {
+      border-left: 3pt solid #1a56a0;
+      padding: 7pt 10pt;
+      margin-bottom: 12pt;
+      background: #f7fbff;
+    }
+    .diag-title {
+      font-size: 7pt;
+      text-transform: uppercase;
+      letter-spacing: 1pt;
+      color: #1a56a0;
+      font-weight: bold;
+      margin-bottom: 4pt;
+    }
+    .diag-text  { font-size: 10pt; line-height: 1.5; }
+
+    /* ── Rx symbol ── */
+    .rx-symbol { font-size: 20pt; font-weight: bold; color: #1a56a0; font-style: italic; margin-bottom: 6pt; }
+
+    /* ── Drugs table ── */
+    table.drugs {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14pt;
+      font-size: 9.5pt;
+    }
+    .drugs th {
+      background: #1a56a0;
+      color: #fff;
+      padding: 5pt 7pt;
+      text-align: left;
+      font-size: 8.5pt;
+    }
+    .drugs td {
+      padding: 5pt 7pt;
+      border-bottom: 1pt solid #dde8f5;
+      vertical-align: top;
+    }
+    .drugs tr.even td { background: #f7fbff; }
+    .drug-name { font-weight: bold; }
+    .drug-gen  { font-size: 8pt; color: #666; }
+
+    /* ── Footer ── */
+    .footer-table {
+      width: 100%;
+      border-top: 1pt solid #c8d8ea;
+      padding-top: 10pt;
+      margin-top: 18pt;
+    }
+    .footer-note { font-size: 7.5pt; color: #888; line-height: 1.6; }
+    .sig-line {
+      border-top: 1pt solid #333;
+      padding-top: 3pt;
+      text-align: center;
+      font-size: 9pt;
+      min-width: 120pt;
+    }
+    .sig-sub { font-size: 7.5pt; color: #666; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <table class="header-table">
+    <tr>
+      <td style="vertical-align:top;">
+        <div class="clinic-name">MediScript</div>
+        <div class="clinic-sub">Medical Prescription System</div>
+      </td>
+      <td style="text-align:right; vertical-align:top;">
+        <div class="rx-num">{{ prescription.prescription_number }}</div>
+        <div class="rx-date">
+          Date: {{ prescription.created_at|date:"F d, Y" }}<br>
+          Time: {{ prescription.created_at|date:"H:i" }}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Doctor + Patient -->
+  <table class="info-table">
+    <tr>
+      <td class="info-cell">
+        <div class="box-title">Prescribing Physician</div>
+        <div class="info-line"><strong>Dr. {{ prescription.doctor.full_name }}</strong></div>
+        {% if prescription.doctor.specialty %}
+        <div class="info-line"><span class="info-label">Specialty:</span> {{ prescription.doctor.specialty }}</div>
+        {% endif %}
+        {% if prescription.doctor.phone %}
+        <div class="info-line"><span class="info-label">Phone:</span> {{ prescription.doctor.phone }}</div>
+        {% endif %}
+      </td>
+      <td class="info-cell">
+        <div class="box-title">Patient</div>
+        <div class="info-line"><strong>{{ prescription.patient.full_name }}</strong></div>
+        <div class="info-line">
+          <span class="info-label">Age:</span> {{ prescription.patient.age }} yrs &nbsp;
+          <span class="info-label">Gender:</span> {{ prescription.patient.get_gender_display }}
+        </div>
+        {% if prescription.patient.phone_number %}
+        <div class="info-line"><span class="info-label">Phone:</span> {{ prescription.patient.phone_number }}</div>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <!-- Diagnosis -->
+  <div class="diag-block">
+    <div class="diag-title">Diagnosis</div>
+    <div class="diag-text">{{ prescription.diagnosis }}</div>
+    {% if prescription.notes %}
+    <div class="diag-text" style="margin-top:4pt; color:#555;">{{ prescription.notes }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Drugs -->
+  <div class="rx-symbol">Rx</div>
+  <table class="drugs">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:25%">Medication</th>
+        <th style="width:27%">Dosage</th>
+        <th style="width:18%">Duration</th>
+        <th style="width:7%">Qty</th>
+        <th>Instructions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in prescription.items.all %}
+      <tr class="{% cycle 'odd' 'even' %}">
+        <td>{{ forloop.counter }}</td>
+        <td>
+          <div class="drug-name">{{ item.drug.name }}</div>
+          {% if item.drug.generic_name %}<div class="drug-gen">{{ item.drug.generic_name }}</div>{% endif %}
+        </td>
+        <td>{{ item.dosage }}</td>
+        <td>{{ item.duration }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.instructions|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <table class="footer-table">
+    <tr>
+      <td style="vertical-align:bottom;">
+        <div class="footer-note">
+          Valid for 30 days from date of issue.<br>
+          Generated by MediScript — {{ prescription.created_at|date:"Y-m-d H:i" }}
+        </div>
+      </td>
+      <td style="text-align:right; vertical-align:bottom; width:160pt;">
+        <div class="sig-line">Dr. {{ prescription.doctor.full_name }}</div>
+        <div class="sig-sub">Signature &amp; Stamp</div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

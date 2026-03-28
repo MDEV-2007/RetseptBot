@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ drug.name }}{% endblock %}
+{% block page_title %}Drug Details{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'drug_list' %}" class="btn btn-outline">&#8592; Back to Drugs</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">{{ drug.name }}</h2>
+    {% if drug.category %}<span class="badge badge-category">{{ drug.category }}</span>{% endif %}
+  </div>
+  <div class="card-body">
+    <div class="profile-grid">
+      {% if drug.generic_name %}
+      <div class="profile-field">
+        <span class="field-label">Generic Name</span>
+        <span class="field-value">{{ drug.generic_name }}</span>
+      </div>
+      {% endif %}
+      <div class="profile-field">
+        <span class="field-label">Category</span>
+        <span class="field-value">{{ drug.category|default:"—" }}</span>
+      </div>
+      {% if drug.description %}
+      <div class="profile-field profile-field-wide">
+        <span class="field-label">Description</span>
+        <span class="field-value">{{ drug.description }}</span>
+      </div>
+      {% endif %}
+      {% if drug.dosage_info %}
+      <div class="profile-field profile-field-wide">
+        <span class="field-label">Dosage Information</span>
+        <span class="field-value dosage-info">{{ drug.dosage_info }}</span>
+      </div>
+      {% endif %}
+      {% if drug.side_effects %}
+      <div class="profile-field profile-field-wide">
+        <span class="field-label">Side Effects</span>
+        <span class="field-value side-effects">{{ drug.side_effects }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

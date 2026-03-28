@@ -1,0 +1,217 @@
+# Uzbek translation for MediScript
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uz\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "English"
+msgstr "English"
+
+msgid "Uzbek"
+msgstr "O'zbekcha"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "Home"
+msgstr "Bosh sahifa"
+
+msgid "Patients"
+msgstr "Bemorlar"
+
+msgid "Drugs"
+msgstr "Dorilar"
+
+msgid "Prescriptions"
+msgstr "Retseptlar"
+
+msgid "Dashboard"
+msgstr "Bosh sahifa"
+
+msgid "New Prescription"
+msgstr "Yangi retsept"
+
+msgid "Add Patient"
+msgstr "Bemor qo'shish"
+
+msgid "Logout"
+msgstr "Chiqish"
+
+msgid "General Practitioner"
+msgstr "Umumiy amaliyotchi"
+
+msgid "Good morning"
+msgstr "Xayrli tong"
+
+msgid "Good afternoon"
+msgstr "Xayrli kun"
+
+msgid "Good evening"
+msgstr "Xayrli kech"
+
+msgid "Quick Access"
+msgstr "Tez kirish"
+
+msgid "Recent Prescriptions"
+msgstr "So'nggi retseptlar"
+
+msgid "View all"
+msgstr "Barchasini ko'rish"
+
+msgid "No prescriptions yet"
+msgstr "Hali retsept yo'q"
+
+msgid "Overview"
+msgstr "Umumiy"
+
+msgid "My Rx"
+msgstr "Mening Rx"
+
+msgid "Today"
+msgstr "Bugun"
+
+msgid "Drug Database"
+msgstr "Dori bazasi"
+
+msgid "Recent Activity"
+msgstr "So'nggi faoliyat"
+
+msgid "Search by patient or diagnosis\u2026"
+msgstr "Bemor yoki tashxis bo'yicha qidiring\u2026"
+
+msgid "Search patients by name\u2026"
+msgstr "Bemor ismi bo'yicha qidiring\u2026"
+
+msgid "Search drugs by name or category\u2026"
+msgstr "Dori nomi yoki kategoriya bo'yicha qidiring\u2026"
+
+msgid "All Patients"
+msgstr "Barcha bemorlar"
+
+msgid "All Drugs"
+msgstr "Barcha dorilar"
+
+msgid "No prescriptions found for"
+msgstr "Retsept topilmadi:"
+
+msgid "No prescriptions created yet."
+msgstr "Hali retsept yaratilmagan."
+
+msgid "Create First Prescription"
+msgstr "Birinchi retsept yaratish"
+
+msgid "No patients found for"
+msgstr "Bemor topilmadi:"
+
+msgid "No patients registered yet."
+msgstr "Hali bemor ro'yxatga olinmagan."
+
+msgid "Add First Patient"
+msgstr "Birinchi bemor qo'shish"
+
+msgid "No drugs found for"
+msgstr "Dori topilmadi:"
+
+msgid "No drugs in database. Add them via Django Admin."
+msgstr "Ma'lumotlar bazasida dori yo'q. Django Admin orqali qo'shing."
+
+msgid "Clear search"
+msgstr "Qidiruvni tozalash"
+
+msgid "Prev"
+msgstr "Oldingi"
+
+msgid "Next"
+msgstr "Keyingi"
+
+msgid "Details"
+msgstr "Batafsil"
+
+msgid "View"
+msgstr "Ko'rish"
+
+msgid "Prescription"
+msgstr "Retsept"
+
+msgid "Physician"
+msgstr "Shifokor"
+
+msgid "Patient"
+msgstr "Bemor"
+
+msgid "Name"
+msgstr "Ism"
+
+msgid "Specialty"
+msgstr "Mutaxassislik"
+
+msgid "Age / Gender"
+msgstr "Yosh / Jinsi"
+
+msgid "Diagnosis"
+msgstr "Tashxis"
+
+msgid "Medications"
+msgstr "Dorilar"
+
+msgid "Download PDF"
+msgstr "PDF yuklab olish"
+
+msgid "Print"
+msgstr "Chop etish"
+
+msgid "Send to Telegram"
+msgstr "Telegramga yuborish"
+
+msgid "Delete Prescription"
+msgstr "Retseptni o'chirish"
+
+msgid "Add New Patient"
+msgstr "Yangi bemor qo'shish"
+
+msgid "Save Changes"
+msgstr "O'zgarishlarni saqlash"
+
+msgid "Sign In"
+msgstr "Kirish"
+
+msgid "Telegram ID"
+msgstr "Telegram ID"
+
+msgid "Password"
+msgstr "Parol"
+
+msgid "Don't have an account?"
+msgstr "Hisobingiz yo'qmi?"
+
+msgid "Ask your administrator to create one via Django Admin."
+msgstr "Administratordan Django Admin orqali yaratishni so'rang."
+
+msgid "registered"
+msgstr "ro'yxatda"
+
+msgid "medication"
+msgstr "dori"
+
+msgid "medications"
+msgstr "dori"
+
+msgid "Results for"
+msgstr "Natijalar:"
+
+msgid "Drug Name"
+msgstr "Dori nomi"
+
+msgid "Generic"
+msgstr "Umumiy nomi"
+
+msgid "Category"
+msgstr "Kategoriya"
+
+msgid "Dosage"
+msgstr "Dozasi"
+
+msgid "Send this prescription to your Telegram?"
+msgstr "Bu retseptni Telegramga yuborsinmi?"

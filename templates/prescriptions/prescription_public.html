@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ prescription.prescription_number }} — Prescription</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
+      padding: 16px 16px 40px;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; }
+
+    /* Header */
+    .rx-header {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      color: #fff;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .rx-header::before {
+      content: '';
+      position: absolute;
+      top: -24px; right: -24px;
+      width: 110px; height: 110px;
+      background: rgba(255,255,255,.07);
+      border-radius: 50%;
+    }
+    .rx-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; opacity: .65; margin-bottom: 4px; }
+    .rx-number { font-size: 24px; font-weight: 800; letter-spacing: -.4px; }
+    .rx-date   { font-size: 13px; opacity: .7; margin-top: 4px; }
+    .rx-badge  {
+      display: inline-block;
+      margin-top: 12px;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 100px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 0 0 1px rgba(0,0,0,.04);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #64748b;
+    }
+    .card-body { padding: 14px 16px; }
+
+    /* Info row */
+    .info-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-label { font-size: 12px; color: #64748b; flex-shrink: 0; }
+    .info-value { font-size: 14px; font-weight: 600; text-align: right; }
+
+    /* Meds table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { padding: 10px 12px; background: #f8fafc; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #64748b; text-align: left; border-bottom: 1px solid #f1f5f9; }
+    td { padding: 11px 12px; border-bottom: 1px solid #f8fafc; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .drug-name { font-weight: 700; font-size: 14px; }
+    .drug-generic { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .badge { display: inline-block; background: #dbeafe; color: #1d4ed8; border-radius: 100px; padding: 2px 9px; font-size: 12px; font-weight: 700; }
+
+    /* Diagnosis */
+    .diag-text { font-size: 15px; font-weight: 600; color: #0f172a; line-height: 1.5; }
+    .notes-text { font-size: 13px; color: #64748b; margin-top: 8px; line-height: 1.5; }
+
+    /* Download button */
+    .dl-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dl-btn:active { background: #1d4ed8; }
+
+    /* Footer */
+    .footer { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="rx-header">
+    <div class="rx-label">Prescription</div>
+    <div class="rx-number">{{ prescription.prescription_number }}</div>
+    <div class="rx-date">{{ prescription.created_at|date:"F d, Y · H:i" }}</div>
+    <div class="rx-badge">{{ prescription.items.count }} medication{{ prescription.items.count|pluralize }}</div>
+  </div>
+
+  <!-- Doctor + Patient -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">&#x1F3E5; Physician</div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Name</span>
+          <span class="info-value">Dr. {{ prescription.doctor.full_name }}</span>
+        </div>
+        {% if prescription.doctor.specialty %}
+        <div class="info-row">
+          <span class="info-label">Specialty</span>
+          <span class="info-value">{{ prescription.doctor.specialty }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">&#128100; Patient</div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Name</span>
+          <span class="info-value">{{ prescription.patient.full_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Age</span>
+          <span class="info-value">{{ prescription.patient.age }} · {{ prescription.patient.get_gender_display }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnosis -->
+  <div class="card">
+    <div class="card-head">&#128203; Diagnosis</div>
+    <div class="card-body">
+      <div class="diag-text">{{ prescription.diagnosis }}</div>
+      {% if prescription.notes %}
+      <div class="notes-text">{{ prescription.notes }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Medications -->
+  <div class="card">
+    <div class="card-head">&#128138; Medications</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Drug</th>
+            <th>Dosage</th>
+            <th>Duration</th>
+            <th>Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in prescription.items.all %}
+          <tr>
+            <td style="color:#64748b;font-weight:600">{{ forloop.counter }}</td>
+            <td>
+              <div class="drug-name">{{ item.drug.name }}</div>
+              {% if item.drug.generic_name %}<div class="drug-generic">{{ item.drug.generic_name }}</div>{% endif %}
+            </td>
+            <td>{{ item.dosage }}</td>
+            <td>{{ item.duration }}</td>
+            <td><span class="badge">{{ item.quantity }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Download PDF -->
+  <a href="{% url 'prescription_share_pdf' prescription.share_token %}" class="dl-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download PDF
+  </a>
+
+  <div class="footer">Generated by MediScript &middot; {{ prescription.created_at|date:"Y" }}</div>
+</div>
+</body>
+</html>

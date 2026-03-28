@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}New Prescription{% endblock %}
+{% block page_title %}New Prescription{% endblock %}
+
+{% block content %}
+<form method="post" id="prescription-form" novalidate>
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <!-- Patient & Diagnosis -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-title">&#128100; Patient & Diagnosis</span>
+    </div>
+    <div class="form-section-body">
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.patient.id_for_label }}">Patient *</label>
+        {{ form.patient }}
+        {% if form.patient.errors %}<span class="form-error">{{ form.patient.errors|join:", " }}</span>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.diagnosis.id_for_label }}">Diagnosis *</label>
+        {{ form.diagnosis }}
+        {% if form.diagnosis.errors %}<span class="form-error">{{ form.diagnosis.errors|join:", " }}</span>{% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="{{ form.notes.id_for_label }}">Notes</label>
+        {{ form.notes }}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Drug formset -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <span class="form-section-title">&#128138; Medications</span>
+      <button type="button" class="btn btn-ghost btn-sm" id="add-drug-row">+ Add Drug</button>
+    </div>
+    <div class="form-section-body">
+
+      {{ formset.management_form }}
+      {% if formset.non_form_errors %}
+      <div class="alert alert-error">{{ formset.non_form_errors }}</div>
+      {% endif %}
+
+      <div id="drug-rows">
+        {% for item_form in formset %}
+        <div class="drug-row" data-row-index="{{ forloop.counter0 }}">
+          {% if item_form.instance.pk %}{{ item_form.id }}{% endif %}
+
+          <div class="drug-row-header">
+            <span class="drug-row-num">Medication #{{ forloop.counter }}</span>
+            {% if formset.can_delete %}
+            <label class="delete-label">{{ item_form.DELETE }} Remove</label>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Medicine *</label>
+            {{ item_form.drug }}
+            {% if item_form.drug.errors %}<span class="form-error">{{ item_form.drug.errors|join:", " }}</span>{% endif %}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label class="form-label">Dosage *</label>
+              {{ item_form.dosage }}
+              {% if item_form.dosage.errors %}<span class="form-error">{{ item_form.dosage.errors|join:", " }}</span>{% endif %}
+            </div>
+            <div class="form-group col-6">
+              <label class="form-label">Duration *</label>
+              {{ item_form.duration }}
+              {% if item_form.duration.errors %}<span class="form-error">{{ item_form.duration.errors|join:", " }}</span>{% endif %}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label class="form-label">Qty</label>
+              {{ item_form.quantity }}
+            </div>
+            <div class="form-group col-8">
+              <label class="form-label">Instructions</label>
+              {{ item_form.instructions }}
+            </div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Empty row template (cloned by JS) -->
+      <div id="empty-drug-row" class="drug-row drug-row-template" style="display:none">
+        <div class="drug-row-header">
+          <span class="drug-row-num">Medication #<span class="row-num-label"></span></span>
+          <button type="button" class="btn btn-danger-outline btn-sm remove-drug-row">Remove</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Medicine *</label>
+          <select name="items-__prefix__-drug" class="form-control">
+            <option value="">— Select a drug —</option>
+            {% for drug in drugs %}
+            <option value="{{ drug.pk }}">{{ drug.name }}{% if drug.generic_name %} ({{ drug.generic_name }}){% endif %}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label class="form-label">Dosage *</label>
+            <input type="text" name="items-__prefix__-dosage" class="form-control" placeholder="e.g. 500mg twice daily">
+          </div>
+          <div class="form-group col-6">
+            <label class="form-label">Duration *</label>
+            <input type="text" name="items-__prefix__-duration" class="form-control" placeholder="e.g. 7 days">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-4">
+            <label class="form-label">Qty</label>
+            <input type="number" name="items-__prefix__-quantity" class="form-control" value="1" min="1">
+          </div>
+          <div class="form-group col-8">
+            <label class="form-label">Instructions</label>
+            <input type="text" name="items-__prefix__-instructions" class="form-control" placeholder="Optional instructions">
+          </div>
+        </div>
+        <input type="hidden" name="items-__prefix__-id" value="">
+        <input type="hidden" name="items-__prefix__-DELETE" value="">
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Sticky submit -->
+  <div class="sticky-actions">
+    <button type="submit" class="btn btn-success btn-block btn-lg">&#10003; Save Prescription</button>
+    <a href="{% url 'prescription_list' %}" class="btn btn-ghost" style="flex-shrink:0">Cancel</a>
+  </div>
+
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.FORMSET_TOTAL = {{ formset.total_form_count }};
+</script>
+{% endblock %}

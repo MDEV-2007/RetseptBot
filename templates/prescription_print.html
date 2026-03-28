@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prescription {{ prescription.prescription_number }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      color: #111;
+      background: #fff;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 20mm 18mm 18mm;
+    }
+
+    /* ── Header ── */
+    .rx-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #1a56a0;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .clinic-name { font-size: 22pt; font-weight: bold; color: #1a56a0; }
+    .clinic-sub  { font-size: 10pt; color: #555; margin-top: 4px; }
+    .rx-meta { text-align: right; font-size: 10pt; color: #444; }
+    .rx-meta strong { font-size: 13pt; color: #1a56a0; }
+
+    /* ── Doctor / Patient block ── */
+    .info-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+    .info-box {
+      flex: 1;
+      border: 1px solid #c8d8ea;
+      border-radius: 6px;
+      padding: 10px 14px;
+      background: #f7fbff;
+    }
+    .info-box h4 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #1a56a0;
+      margin-bottom: 6px;
+    }
+    .info-line { margin: 3px 0; font-size: 11pt; }
+    .info-label { color: #666; font-size: 9pt; }
+
+    /* ── Diagnosis ── */
+    .diagnosis-block {
+      border-left: 4px solid #1a56a0;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      background: #f7fbff;
+    }
+    .diagnosis-block h4 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #1a56a0;
+      margin-bottom: 6px;
+    }
+    .diagnosis-text { font-size: 11.5pt; line-height: 1.5; }
+
+    /* ── Drugs table ── */
+    .rx-symbol {
+      font-size: 28pt;
+      font-weight: bold;
+      color: #1a56a0;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    table.drugs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 11pt;
+    }
+    .drugs-table th {
+      background: #1a56a0;
+      color: #fff;
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 10pt;
+    }
+    .drugs-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #dde8f5;
+      vertical-align: top;
+    }
+    .drugs-table tr:nth-child(even) td { background: #f7fbff; }
+    .drug-name { font-weight: bold; }
+    .drug-generic { font-size: 9pt; color: #666; }
+
+    /* ── Footer ── */
+    .rx-footer {
+      margin-top: auto;
+      border-top: 1px solid #c8d8ea;
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .signature-line {
+      text-align: center;
+      border-top: 1px solid #333;
+      padding-top: 4px;
+      min-width: 160px;
+      font-size: 10pt;
+    }
+    .footer-note { font-size: 8pt; color: #888; }
+
+    /* ── Print controls (screen only) ── */
+    .print-controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+    .btn-print {
+      background: #1a56a0;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 13pt;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-close-print {
+      background: #eee;
+      color: #333;
+      border: none;
+      padding: 10px 20px;
+      font-size: 13pt;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    @media print {
+      .print-controls { display: none !important; }
+      body { background: #fff; }
+      .page { margin: 0; padding: 15mm 15mm 15mm; width: 100%; }
+      @page { size: A4; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Print / Close buttons (screen only) -->
+<div class="print-controls">
+  <button class="btn-print" onclick="window.print()">&#128438; Print</button>
+  <a href="javascript:history.back()" class="btn-close-print">&#10005; Close</a>
+</div>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="rx-header">
+    <div>
+      <div class="clinic-name">⚕ MediScript</div>
+      <div class="clinic-sub">Medical Prescription System</div>
+    </div>
+    <div class="rx-meta">
+      <strong>{{ prescription.prescription_number }}</strong><br>
+      Date: {{ prescription.created_at|date:"F d, Y" }}<br>
+      Time: {{ prescription.created_at|date:"H:i" }}
+    </div>
+  </div>
+
+  <!-- Doctor + Patient -->
+  <div class="info-row">
+    <div class="info-box">
+      <h4>Prescribing Physician</h4>
+      <div class="info-line"><strong>Dr. {{ prescription.doctor.full_name }}</strong></div>
+      {% if prescription.doctor.specialty %}
+      <div class="info-line"><span class="info-label">Specialty:</span> {{ prescription.doctor.specialty }}</div>
+      {% endif %}
+      {% if prescription.doctor.phone %}
+      <div class="info-line"><span class="info-label">Phone:</span> {{ prescription.doctor.phone }}</div>
+      {% endif %}
+    </div>
+    <div class="info-box">
+      <h4>Patient</h4>
+      <div class="info-line"><strong>{{ prescription.patient.full_name }}</strong></div>
+      <div class="info-line">
+        <span class="info-label">Age:</span> {{ prescription.patient.age }} yrs &nbsp;|&nbsp;
+        <span class="info-label">Gender:</span> {{ prescription.patient.get_gender_display }}
+      </div>
+      {% if prescription.patient.phone_number %}
+      <div class="info-line"><span class="info-label">Phone:</span> {{ prescription.patient.phone_number }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Diagnosis -->
+  <div class="diagnosis-block">
+    <h4>Diagnosis</h4>
+    <div class="diagnosis-text">{{ prescription.diagnosis }}</div>
+    {% if prescription.notes %}
+    <div class="diagnosis-text" style="margin-top:6px;color:#555">{{ prescription.notes }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Drugs -->
+  <div class="rx-symbol">&#8478;</div>
+  <table class="drugs-table">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:28%">Medication</th>
+        <th style="width:28%">Dosage</th>
+        <th style="width:20%">Duration</th>
+        <th style="width:8%">Qty</th>
+        <th style="width:12%">Instructions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in prescription.items.all %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+          <div class="drug-name">{{ item.drug.name }}</div>
+          {% if item.drug.generic_name %}<div class="drug-generic">{{ item.drug.generic_name }}</div>{% endif %}
+        </td>
+        <td>{{ item.dosage }}</td>
+        <td>{{ item.duration }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.instructions|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <div class="rx-footer">
+    <div class="footer-note">
+      This prescription is valid for 30 days from the date of issue.<br>
+      Generated by MediScript &mdash; {{ prescription.created_at|date:"Y-m-d H:i" }}
+    </div>
+    <div class="signature-line">
+      Dr. {{ prescription.doctor.full_name }}<br>
+      <small>Signature &amp; Stamp</small>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">&#128100; Patient Information</span>
+      </div>
+      <div class="form-section-body">
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.full_name.id_for_label }}">Full Name *</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<span class="form-error">{{ form.full_name.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label class="form-label" for="{{ form.age.id_for_label }}">Age *</label>
+            {{ form.age }}
+            {% if form.age.errors %}<span class="form-error">{{ form.age.errors|join:", " }}</span>{% endif %}
+          </div>
+          <div class="form-group col-6">
+            <label class="form-label" for="{{ form.gender.id_for_label }}">Gender *</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<span class="form-error">{{ form.gender.errors|join:", " }}</span>{% endif %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+          {{ form.phone_number }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.address.id_for_label }}">Address</label>
+          {{ form.address }}
+        </div>
+
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="{{ form.notes.id_for_label }}">Notes</label>
+          {{ form.notes }}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="sticky-actions">
+      <button type="submit" class="btn btn-primary btn-block">{{ submit_label }}</button>
+      <a href="{% url 'patient_list' %}" class="btn btn-ghost" style="flex-shrink:0">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+Django==4.2.7
+Pillow==10.1.0
+xhtml2pdf==0.2.11
+aiogram==3.2.0
+python-decouple==3.8
+psycopg2-binary==2.9.9
+whitenoise==6.6.0

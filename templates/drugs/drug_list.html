@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Drugs{% endblock %}
+{% block page_title %}Drug Database{% endblock %}
+
+{% block content %}
+
+<form method="get" class="search-wrap">
+  <span class="search-icon">&#128269;</span>
+  <input type="text" name="q" value="{{ q }}" class="search-input-field"
+         placeholder="Search drugs by name or category…" autocomplete="off" />
+</form>
+
+<div class="section-title">
+  {% if q %}Results for "{{ q }}"{% else %}All Drugs{% endif %}
+  <span class="badge badge-blue">{{ total_count }}</span>
+</div>
+
+{% if drugs %}
+<div class="card">
+  <div class="card-body p-0 table-scroll">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Drug Name</th>
+          <th>Generic</th>
+          <th>Category</th>
+          <th>Dosage</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for drug in drugs %}
+        <tr>
+          <td style="font-weight:700">{{ drug.name }}</td>
+          <td style="color:var(--text-2)">{{ drug.generic_name|default:"—" }}</td>
+          <td>{% if drug.category %}<span class="badge badge-category">{{ drug.category }}</span>{% else %}—{% endif %}</td>
+          <td style="color:var(--text-2)">{{ drug.dosage_info|truncatechars:40|default:"—" }}</td>
+          <td><a href="{% url 'drug_detail' drug.pk %}" class="btn btn-ghost btn-sm">Details</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+<div class="pagination-bar">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-ghost btn-sm">&#8592; Prev</a>
+  {% endif %}
+  <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-ghost btn-sm">Next &#8594;</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="card">
+  <div class="card-body empty-state">
+    <span class="empty-icon">&#128138;</span>
+    {% if q %}<p>No drugs found for "{{ q }}".</p>
+    <a href="{% url 'drug_list' %}" class="btn btn-ghost btn-sm">Clear search</a>
+    {% else %}<p>No drugs in database. Add them via Django Admin.</p>{% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

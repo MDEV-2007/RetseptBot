@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Sign In{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block auth_content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <span class="logo-icon-lg">⚕</span>
+    <div class="auth-title">MediScript</div>
+    <div class="auth-subtitle">Medical Prescription System</div>
+  </div>
+
+  <form method="post" class="auth-form" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error" style="margin-bottom:20px">
+      {{ form.non_field_errors|join:", " }}
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label for="{{ form.telegram_id.id_for_label }}" class="form-label">Telegram ID</label>
+      {{ form.telegram_id }}
+      {% if form.telegram_id.errors %}<span class="form-error">{{ form.telegram_id.errors|join:", " }}</span>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+      {{ form.password }}
+      {% if form.password.errors %}<span class="form-error">{{ form.password.errors|join:", " }}</span>{% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-xl" style="margin-top:4px">Sign In</button>
+  </form>
+
+  <p class="auth-hint">
+    Don't have an account?<br>
+    Ask your administrator to create one via Django Admin.
+  </p>
+</div>
+{% endblock auth_content %}

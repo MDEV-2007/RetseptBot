@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Home" %}{% endblock %}
+{% block body_class %}dash-page{% endblock %}
+{% block page_title %}{% trans "Home" %}{% endblock %}
+
+{% block content %}
+
+<!-- ── Header ───────────────────────────────────────────────── -->
+<header class="dash-header">
+  <div>
+    <div class="dash-greeting">
+      {% now "H" as hour %}
+      {% if hour < "12" %}{% trans "Good morning" %}{% elif hour < "17" %}{% trans "Good afternoon" %}{% else %}{% trans "Good evening" %}{% endif %}
+    </div>
+    <div class="dash-doctor">Dr. {{ user.full_name }}</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    {% include "partials/lang_switcher.html" %}
+    <div class="dash-profile" id="dashProfile">
+      <button class="dash-avatar" id="dashAvatarBtn" aria-label="Profile menu">
+        {{ user.full_name|first|upper }}
+      </button>
+      <div class="dash-profile-drop">
+        <div class="dash-profile-name">Dr. {{ user.full_name }}</div>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="topbar-logout-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Chiqish
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Primary CTAs ─────────────────────────────────────────── -->
+<div class="dash-cta">
+  <a href="{% url 'prescription_create' %}" class="btn-cta-primary">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    {% trans "New Prescription" %}
+  </a>
+  <a href="{% url 'patient_create' %}" class="btn-cta-secondary">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+    {% trans "Add Patient" %}
+  </a>
+</div>
+
+<!-- ── Quick access grid ─────────────────────────────────────── -->
+<div class="dash-section">{% trans "Quick Access" %}</div>
+<div class="dash-grid">
+
+  <a href="{% url 'patient_list' %}" class="dash-grid-card dgc-blue">
+    <div class="dgc-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <div class="dgc-body">
+      <div class="dgc-count">{{ total_patients }}</div>
+      <div class="dgc-label">{% trans "Patients" %}</div>
+    </div>
+  </a>
+
+  <a href="{% url 'prescription_list' %}" class="dash-grid-card dgc-green">
+    <div class="dgc-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+    </div>
+    <div class="dgc-body">
+      <div class="dgc-count">{{ my_prescriptions }}</div>
+      <div class="dgc-label">{% trans "Prescriptions" %}</div>
+    </div>
+  </a>
+
+  <a href="{% url 'drug_list' %}" class="dash-grid-card dgc-amber">
+    <div class="dgc-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+      </svg>
+    </div>
+    <div class="dgc-body">
+      <div class="dgc-count">{{ total_drugs }}</div>
+      <div class="dgc-label">{% trans "Drugs" %}</div>
+    </div>
+  </a>
+
+  <a href="{% url 'prescription_list' %}" class="dash-grid-card dgc-purple">
+    <div class="dgc-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    </div>
+    <div class="dgc-body">
+      <div class="dgc-count">{{ today_prescriptions }}</div>
+      <div class="dgc-label">{% trans "Today" %}</div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ── Recent Prescriptions ──────────────────────────────────── -->
+<div class="dash-section">
+  {% trans "Recent Prescriptions" %}
+  <a href="{% url 'prescription_list' %}">{% trans "View all" %}</a>
+</div>
+
+<div class="rx-card">
+  {% if recent_prescriptions %}
+  <div class="rx-list">
+    {% for rx in recent_prescriptions %}
+    <a href="{% url 'prescription_detail' rx.pk %}" class="rx-row">
+      <div class="rx-avatar" aria-hidden="true">{{ rx.patient.full_name|first|upper }}</div>
+      <div class="rx-row-body">
+        <div class="rx-row-name">{{ rx.patient.full_name }}</div>
+        <div class="rx-row-diag">{{ rx.diagnosis|truncatechars:45 }}</div>
+      </div>
+      <div class="rx-row-date">{{ rx.created_at|date:"M d" }}</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:32px 20px">
+    <div style="font-size:30px;margin-bottom:8px">&#128203;</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text-2)">{% trans "No prescriptions yet" %}</div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ── Overview stats ────────────────────────────────────────── -->
+<div class="dash-section" style="margin-top:4px">{% trans "Overview" %}</div>
+<div class="dash-stats-bottom" style="margin-bottom:16px">
+  <div class="dsb-card">
+    <div class="dsb-val">{{ total_patients }}</div>
+    <div class="dsb-lbl">Patients</div>
+  </div>
+  <div class="dsb-card">
+    <div class="dsb-val">{{ my_prescriptions }}</div>
+    <div class="dsb-lbl">{% trans "My Rx" %}</div>
+  </div>
+  <div class="dsb-card">
+    <div class="dsb-val">{{ today_prescriptions }}</div>
+    <div class="dsb-lbl">Today</div>
+  </div>
+  <div class="dsb-card">
+    <div class="dsb-val">{{ total_drugs }}</div>
+    <div class="dsb-lbl">Drugs</div>
+  </div>
+</div>
+
+{% endblock %}

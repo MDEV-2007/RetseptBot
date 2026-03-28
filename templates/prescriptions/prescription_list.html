@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Prescriptions{% endblock %}
+{% block page_title %}Prescriptions{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'prescription_create' %}" class="btn btn-primary btn-sm">+ New</a>
+{% endblock %}
+
+{% block content %}
+
+<form method="get" class="search-wrap">
+  <span class="search-icon">&#128269;</span>
+  <input type="text" name="q" value="{{ q }}" class="search-input-field"
+         placeholder="Search by patient or diagnosis…" autocomplete="off" />
+</form>
+
+{% if prescriptions %}
+<div style="display:flex;flex-direction:column;gap:10px">
+  {% for rx in prescriptions %}
+  <a href="{% url 'prescription_detail' rx.pk %}" style="display:block;text-decoration:none;color:inherit">
+    <div class="card" style="margin-bottom:0;transition:box-shadow var(--t),border-color var(--t)">
+      <div class="card-body" style="padding:16px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+              <span class="badge badge-blue">{{ rx.prescription_number }}</span>
+              <span class="badge badge-green">{{ rx.items.count }} drug{{ rx.items.count|pluralize }}</span>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">{{ rx.patient.full_name }}</div>
+            <div style="font-size:13px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rx.diagnosis|truncatechars:60 }}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-size:12px;color:var(--text-2)">{{ rx.created_at|date:"M d" }}</div>
+            <div style="font-size:20px;color:var(--slate-300);margin-top:8px">&#8250;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="pagination-bar">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-ghost btn-sm">&#8592; Prev</a>
+  {% endif %}
+  <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-ghost btn-sm">Next &#8594;</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="card">
+  <div class="card-body empty-state">
+    <span class="empty-icon">&#128203;</span>
+    {% if q %}<p>No prescriptions found for "{{ q }}".</p>
+    <a href="{% url 'prescription_list' %}" class="btn btn-ghost btn-sm">Clear</a>
+    {% else %}<p>No prescriptions created yet.</p>
+    <a href="{% url 'prescription_create' %}" class="btn btn-primary">Create First Prescription</a>{% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

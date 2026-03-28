@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a56a0" />
+  <title><!--AX:TITLE-->{% block title %}MediScript{% endblock %}<!--/AX:TITLE--> — MediScript</title>
+  {% load static i18n %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  {% block extra_css %}{% endblock %}
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="{% block body_class %}{% endblock %}"><!--AX:BC-->{% block body_class %}{% endblock %}<!--/AX:BC-->
+
+{% if user.is_authenticated %}
+
+<!-- ── Sidebar backdrop (mobile overlay) ────────────────────── -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ── Sidebar ──────────────────────────────────────────────── -->
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <span class="logo-icon">⚕</span>
+      <span class="logo-text">MediScript</span>
+    </div>
+    <button class="sidebar-toggle" id="sidebarClose" aria-label="Close sidebar">&#10005;</button>
+  </div>
+
+  <div class="sidebar-doctor">
+    <div class="doctor-avatar" aria-hidden="true">{{ user.full_name|first|upper }}</div>
+    <div class="doctor-info">
+      <span class="doctor-name">Dr. {{ user.full_name }}</span>
+      <span class="doctor-spec">{{ user.specialty|default:_("General Practitioner") }}</span>
+    </div>
+  </div>
+
+  <ul class="sidebar-nav" role="list">
+    <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <a href="{% url 'dashboard' %}" class="nav-link">
+        <span class="nav-icon" aria-hidden="true">&#9632;</span>
+        <span class="nav-label">{% trans "Dashboard" %}</span>
+      </a>
+    </li>
+    <li class="nav-item {% if 'patient' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'patient_list' %}" class="nav-link">
+        <span class="nav-icon" aria-hidden="true">&#128100;</span>
+        <span class="nav-label">{% trans "Patients" %}</span>
+      </a>
+    </li>
+    <li class="nav-item {% if 'drug' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'drug_list' %}" class="nav-link">
+        <span class="nav-icon" aria-hidden="true">&#128138;</span>
+        <span class="nav-label">{% trans "Drugs" %}</span>
+      </a>
+    </li>
+    <li class="nav-item {% if 'prescription' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'prescription_list' %}" class="nav-link">
+        <span class="nav-icon" aria-hidden="true">&#128203;</span>
+        <span class="nav-label">{% trans "Prescriptions" %}</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="{% url 'prescription_create' %}" class="btn-new-rx">
+      <span>+</span> {% trans "New Prescription" %}
+    </a>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn-logout">{% trans "Logout" %}</button>
+    </form>
+  </div>
+</nav>
+
+<!-- ── Main wrapper ──────────────────────────────────────────── -->
+<div class="main-wrapper">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="topbar-toggle" id="topbarToggle" aria-label="Open sidebar">&#9776;</button>
+    <h1 class="topbar-title"><!--AX:NAVT-->{% block page_title %}{% endblock %}<!--/AX:NAVT--></h1>
+    <div class="topbar-actions"><!--AX:NAVA-->{% block topbar_actions %}{% endblock %}<!--/AX:NAVA--></div>
+    {% include "partials/lang_switcher.html" %}
+
+    <!-- Profile avatar + logout dropdown -->
+    <div class="topbar-profile" id="topbarProfile">
+      <button class="topbar-avatar" id="topbarAvatarBtn" aria-label="Profile menu">
+        {{ user.full_name|first|upper }}
+      </button>
+      <div class="topbar-profile-drop" id="topbarProfileDrop">
+        <div class="topbar-profile-name">Dr. {{ user.full_name }}</div>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="topbar-logout-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Chiqish
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!--AX:MSGS-->{% if messages %}<div class="messages-container" role="alert" aria-live="polite">{% for msg in messages %}<div class="alert alert-{{ msg.tags }}"><span>{{ msg }}</span><button class="alert-close" onclick="this.parentElement.remove()" aria-label="Dismiss">&#10005;</button></div>{% endfor %}</div>{% endif %}<!--/AX:MSGS-->
+
+  <!--AX:MAIN--><main class="main-content">
+    {% block content %}{% endblock %}
+  </main><!--/AX:MAIN-->
+
+</div><!-- /.main-wrapper -->
+
+<!-- ── Mobile bottom tab bar ────────────────────────────────── -->
+<nav class="bottom-tabs" aria-label="Mobile navigation">
+  <div class="bottom-tabs-inner">
+    <a href="{% url 'dashboard' %}"
+       class="bottom-tab {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+       aria-label="Home">
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/>
+        </svg>
+      </span>
+      <span>{% trans "Home" %}</span>
+    </a>
+    <a href="{% url 'patient_list' %}"
+       class="bottom-tab {% if 'patient' in request.resolver_match.url_name %}active{% endif %}"
+       aria-label="{% trans 'Patients' %}">
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <span>{% trans "Patients" %}</span>
+    </a>
+    <a href="{% url 'drug_list' %}"
+       class="bottom-tab {% if 'drug' in request.resolver_match.url_name %}active{% endif %}"
+       aria-label="{% trans 'Drugs' %}">
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+        </svg>
+      </span>
+      <span>{% trans "Drugs" %}</span>
+    </a>
+    <a href="{% url 'prescription_list' %}"
+       class="bottom-tab {% if 'prescription' in request.resolver_match.url_name %}active{% endif %}"
+       aria-label="{% trans 'Prescriptions' %}">
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </span>
+      <span>{% trans "Rx" %}</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ── FAB (New Prescription) ───────────────────────────────── -->
+<a href="{% url 'prescription_create' %}" class="fab" aria-label="New prescription">&#43;</a>
+
+{% else %}
+<!-- ── Unauthenticated ───────────────────────────────────────── -->
+<div class="auth-wrapper">
+  {% if messages %}
+  <div style="position:fixed;top:16px;right:16px;z-index:999;width:min(320px,90vw)">
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">
+      <span>{{ msg }}</span>
+      <button class="alert-close" onclick="this.parentElement.remove()">&#10005;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block auth_content %}{% endblock %}
+</div>
+{% endif %}
+
+<script src="{% static 'js/prescription.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
