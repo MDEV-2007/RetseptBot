@@ -1,0 +1,26 @@
+# /etc/systemd/system/mediscript.service
+# Install: sudo cp deploy/mediscript.service /etc/systemd/system/
+#          sudo systemctl daemon-reload
+#          sudo systemctl enable mediscript
+#          sudo systemctl start mediscript
+
+[Unit]
+Description=MediScript Gunicorn application server
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/mediscript
+EnvironmentFile=/home/ubuntu/mediscript/.env
+ExecStart=/home/ubuntu/mediscript/venv/bin/gunicorn \
+    --config /home/ubuntu/mediscript/gunicorn.conf.py \
+    config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

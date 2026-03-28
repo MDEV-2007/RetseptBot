@@ -1,0 +1,33 @@
+services:
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      # SQLite database — survives container restarts/rebuilds
+      - sqlite_data:/app/db.sqlite3
+      # Static files shared with Nginx
+      - static_files:/app/staticfiles
+      # User-uploaded media
+      - media_files:/app/media
+    expose:
+      - "8000"
+    depends_on:
+      - nginx
+
+  nginx:
+    image: nginx:1.25-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_files:/app/staticfiles:ro
+      - media_files:/app/media:ro
+    depends_on: []
+
+volumes:
+  sqlite_data:
+  static_files:
+  media_files:

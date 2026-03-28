@@ -8,25 +8,21 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-pro
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
-# Always allow ngrok and local hosts regardless of .env
-ALLOWED_HOSTS += [
-    'candance-cropless-nonseriately.ngrok-free.dev',
-    'localhost',
-    '127.0.0.1',
-]
-ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://candance-cropless-nonseriately.ngrok-free.dev',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-]
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:8000,http://127.0.0.1:8000',
+).split(',')
 
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
+
+# Trust the X-Forwarded-Proto header set by Nginx (required for HTTPS behind proxy)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,10 +83,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+_db_path = config('DB_PATH', default=str(BASE_DIR / 'db.sqlite3'))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': _db_path,
         'OPTIONS': {'timeout': 20},
         'CONN_MAX_AGE': 60,
     }
